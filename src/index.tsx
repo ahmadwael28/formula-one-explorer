@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import './theme'; // Ensure the custom theme definitions are loaded
 import App from './App';
 
 const root = ReactDOM.createRoot(

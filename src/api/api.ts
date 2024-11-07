@@ -9,10 +9,13 @@ const api = axios.create({
     },
 });
 
-// Function to fetch seasons data from the Ergast API
-export const fetchSeasons = () => {
-    return api.get('/api/f1/seasons.json')
-        .then(response => response.data.MRData.SeasonTable.Seasons);
+// Function to fetch seasons data with pagination from the Ergast API
+export const fetchSeasons = (limit = 10, offset = 0) => {
+    return api.get(`/api/f1/seasons.json`, { params: { limit, offset } })
+        .then(response => ({
+            seasons: response.data.MRData.SeasonTable.Seasons,
+            total: parseInt(response.data.MRData.total, 10),
+        }));
 };
 
 export default api;
