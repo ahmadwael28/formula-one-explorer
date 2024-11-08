@@ -4,45 +4,46 @@ import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
     listContainer: {
-        listStyleType: 'none',
-        padding: 0,
+        padding: '0 8px',
         margin: 0,
-        width: '50%', // Ensures the <ul> takes the full width of its parent
+        width: '100%', // Full width for center alignment
+        maxWidth: '600px', // Optional max-width to limit the width on larger screens
     },
     listItem: {
         display: 'flex',
         alignItems: 'center',
         cursor: 'pointer',
-        width: '100%', // Enforces full width within the <ul>
-        height: '100px', // Fixed height for consistency
+        width: '100%',
+        height: '100px',
         borderRadius: '8px',
         backgroundColor: theme.palette.background.paper,
-        backdropFilter: 'blur(8px)', // Add blur to the background
+        backdropFilter: 'blur(8px)',
         border: `1px solid ${theme.palette.divider}`,
         boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)',
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
         marginBottom: '12px',
-        overflow: 'hidden', // Ensures no overflow beyond border-radius
+        overflow: 'hidden',
         '&:hover': {
             transform: 'translateX(5px)',
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.15)',
         },
+        boxSizing: 'border-box'
     },
     imageContainer: {
         width: '100px',
-        height: '100%', // Full height of the list item
-        backgroundImage: 'url(/assets/RaceFlag.jpg)', // Ensure path matches your file structure
+        height: '100%',
+        backgroundImage: 'url(/assets/RaceFlag.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        borderRadius: '8px 0 0 8px', // Rounded left corners to match list item
-        flexShrink: 0, // Prevent image from shrinking
+        borderRadius: '8px 0 0 8px',
+        flexShrink: 0,
     },
     listItemText: {
         fontWeight: 'bold',
         fontSize: '1.2rem',
         color: theme.palette.text.primary,
-        flexGrow: 1, // Allows text to take up available space between image and button
-        paddingLeft: '16px', // Space between image and text
+        flexGrow: 1,
+        paddingLeft: '16px',
     },
     readMoreButton: {
         color: theme.palette.primary.main,

@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { fetchSeasons } from '../api/api';
 import SeasonCard from '../components/seasonCard/SeasonCard';
 import SeasonList from '../components/seasonList/SeasonList';
-import { ToggleButton, ToggleButtonGroup, Pagination, Typography, useTheme, CircularProgress, Box } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup, Pagination, Typography, useTheme, CircularProgress, Box, Grid2 } from '@mui/material';
 import ListIcon from '@mui/icons-material/List';
 import GridViewIcon from '@mui/icons-material/GridView';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface Season {
     season: string;
@@ -14,9 +15,11 @@ interface Season {
 
 const SeasonListing: React.FC = () => {
     const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // Media query for mobile view
+
     const [seasons, setSeasons] = useState<Season[]>([]);
     const [totalSeasons, setTotalSeasons] = useState(0);
-    const [viewMode, setViewMode] = useState<'list' | 'card'>('list');
+    const [viewMode, setViewMode] = useState<'list' | 'card'>('card');
     const [currentPage, setCurrentPage] = useState(1);
     const [animationClass, setAnimationClass] = useState<string>('');
     const [loading, setLoading] = useState(false);
@@ -63,13 +66,38 @@ const SeasonListing: React.FC = () => {
     return (
         <div style={{ color: theme.palette.text.primary, padding: '1rem', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflowY: "hidden" }}>
             {/* Title */}
-            <Typography variant="h4" component="h1" style={{ fontSize: '52px', fontWeight: 'bold', color: theme.palette.text.secondary, marginBottom: '8px' }}>
+            <Typography
+                variant="h4"
+                component="h1"
+                style={{
+                    fontSize: '52px',
+                    fontWeight: 'bold',
+                    color: theme.palette.text.secondary,
+                    marginBottom: '8px',
+                    textAlign: isSmallScreen ? 'center' : 'left',
+                }}
+            >
                 Seasons
             </Typography>
 
             {/* Subtitle and Toggle Button */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary }}>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: isSmallScreen ? 'column' : 'row', // Stack vertically on small screens
+                    justifyContent: isSmallScreen ? 'center' : 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '16px',
+                    textAlign: isSmallScreen ? 'center' : 'left',
+                }}
+            >
+                <Typography
+                    variant="subtitle1"
+                    style={{
+                        color: theme.palette.text.secondary,
+                        marginBottom: isSmallScreen ? '8px' : '0', // Add space below subtitle on small screens
+                    }}
+                >
                     Select a season to view its races.
                 </Typography>
                 <ToggleButtonGroup
@@ -77,6 +105,9 @@ const SeasonListing: React.FC = () => {
                     exclusive
                     onChange={handleViewChange}
                     aria-label="view mode"
+                    style={{
+                        alignSelf: isSmallScreen ? 'center' : 'flex-end', // Center-align on small screens
+                    }}
                 >
                     <ToggleButton value="list" aria-label="list view">
                         <ListIcon />
@@ -94,24 +125,27 @@ const SeasonListing: React.FC = () => {
                 </Box>
             )}
 
-            {/* Centered Card/List View with Animation */}
+            {/* Responsive Grid for Card/List View */}
             <div
                 className={animationClass}
                 style={{
                     display: loading ? 'none' : 'flex',
-                    justifyContent: 'center',
-                    flexWrap: 'wrap',
+                    flexDirection: 'column',
                     transition: 'opacity 0.5s ease',
                     height: 'calc(100vh - 200px)',
-                    overflowX: 'hidden',
+                    overflowY: 'auto',
                 }}
             >
                 {viewMode === 'list' ? (
                     <SeasonList seasons={seasons} />
                 ) : (
-                    seasons.map((season) => (
-                        <SeasonCard key={season.season} season={season} />
-                    ))
+                    <Grid2 container spacing={3} justifyContent="center" style={{ padding: '8px', overflowY: "auto" }}>
+                        {seasons.map((season) => (
+                            <Grid2 size={{ xs: 6, sm: 6, md: 4, lg: 2.4 }} key={season.season}>
+                                <SeasonCard season={season} />
+                            </Grid2>
+                        ))}
+                    </Grid2>
                 )}
             </div>
 

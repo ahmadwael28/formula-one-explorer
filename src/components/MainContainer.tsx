@@ -1,10 +1,15 @@
 import React from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 interface MainContainerProps {
     children: React.ReactNode;
 }
 
 const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
+    const theme = useTheme();
+    const isMobileScreen = useMediaQuery(theme.breakpoints.down('sm')); // Detects mobile screen size
+
     return (
         <div
             style={{
@@ -29,7 +34,15 @@ const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
                     zIndex: 0,
                 }}
             />
-            <div className="main-container" style={{ position: 'relative', zIndex: 1, padding: '0 2rem', flex: 1 }}>
+            <div
+                className="main-container"
+                style={{
+                    position: 'relative',
+                    zIndex: 1,
+                    padding: isMobileScreen ? '0 1rem' : '0 2rem', // Conditional padding for mobile screens
+                    flex: 1,
+                }}
+            >
                 {children}
             </div>
         </div>
@@ -37,3 +50,4 @@ const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
 };
 
 export default MainContainer;
+
