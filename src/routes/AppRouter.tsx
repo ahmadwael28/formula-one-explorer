@@ -10,7 +10,7 @@ const AppRoutes: React.FC = () => {
         <Routes>
             <Route path="/" element={<SeasonListing />} />
             <Route path="/season/:seasonId" element={<RacesForSeason />} />
-            <Route path="/race/:raceId" element={<RaceDetails />} />
+            <Route path="/season/race/:seasonId/:round" element={<RaceDetails />} />
         </Routes>
     );
 };

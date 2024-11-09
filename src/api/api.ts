@@ -18,4 +18,13 @@ export const fetchSeasons = (limit = 10, offset = 0) => {
         }));
 };
 
+// Function to fetch races for a specific season
+export const fetchRacesForSeason = (season: string, limit = 10, offset = 0) => {
+    return api.get(`/api/f1/${season}/races.json`, { params: { limit, offset } })
+        .then(response => ({
+            races: response.data.MRData.RaceTable.Races,
+            total: parseInt(response.data.MRData.total, 10),
+        }));
+};
+
 export default api;
