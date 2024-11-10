@@ -22,6 +22,7 @@ import RaceCard from '../../components/raceCard/RaceCard';
 import SeasonRacesTable from '../../components/seasonRacesTable/SeasonRacesTable';
 import useStyles from './styles';
 
+// Define interface for race data
 interface Race {
     round: string;
     raceName: string;
@@ -41,19 +42,25 @@ const RacesForSeason: React.FC = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const classes = useStyles();
+
+    // Retrieve seasonId from URL parameters
     const { seasonId } = useParams<{ seasonId: string }>();
     const navigate = useNavigate();
+
+    // Component state hooks
     const [races, setRaces] = useState<Race[]>([]);
-    const [viewMode, setViewMode] = useState<'list' | 'card'>('card');
+    const [viewMode, setViewMode] = useState<'list' | 'card'>('card'); // Current view mode
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [animationClass, setAnimationClass] = useState<string>('');
+    const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar for pin/unpin action feedback
+    const [snackbarMessage, setSnackbarMessage] = useState(''); // Snackbar message text
+    const [currentPage, setCurrentPage] = useState(1); // Current pagination page
+    const [animationClass, setAnimationClass] = useState<string>(''); // Animation for page transition
 
+    // Get localStorage key for pinned races in the current season
     const getPinnedRacesKey = () => `pinnedRaces_${seasonId}`;
 
+    // Sort races by pinned status, with pinned races appearing at the top
     const sortRaces = (races: Race[]) => {
         const pinnedRaces = JSON.parse(localStorage.getItem(getPinnedRacesKey()) || '[]');
         return [...races].sort((a, b) => {
@@ -63,6 +70,7 @@ const RacesForSeason: React.FC = () => {
         });
     };
 
+    // Fetch and set races for the selected season, applying sorting and error handling
     const loadAndSortRaces = async () => {
         if (!seasonId) return;
         setLoading(true);
@@ -82,17 +90,20 @@ const RacesForSeason: React.FC = () => {
         }
     };
 
+    // Run loadAndSortRaces on initial mount and when seasonId changes
     useEffect(() => {
         loadAndSortRaces();
     }, [seasonId]);
 
+    // Handle switching between list and card view modes
     const handleViewChange = (_event: React.MouseEvent<HTMLElement>, newView: 'list' | 'card') => {
         if (newView) {
             setViewMode(newView);
-            setCurrentPage(1);
+            setCurrentPage(1); // Reset pagination to first page on view change
         }
     };
 
+    // Handle pagination changes with fade and slide animation
     const handlePageChange = (_event: React.ChangeEvent<unknown>, page: number) => {
         setAnimationClass('fade-out');
         setTimeout(() => {
@@ -101,11 +112,13 @@ const RacesForSeason: React.FC = () => {
         }, 300);
     };
 
+    // Toggle pin/unpin status for a race, updating localStorage and sorting races
     const handleTogglePin = (race: Race) => {
         const pinnedRacesKey = getPinnedRacesKey();
         const pinnedRaces = JSON.parse(localStorage.getItem(pinnedRacesKey) || '[]');
         const isPinned = pinnedRaces.includes(race.round);
 
+        // Update the list of pinned races in localStorage
         const updatedPinnedRaces = isPinned
             ? pinnedRaces.filter((round: string) => round !== race.round)
             : [...pinnedRaces, race.round];
@@ -113,31 +126,37 @@ const RacesForSeason: React.FC = () => {
         localStorage.setItem(pinnedRacesKey, JSON.stringify(updatedPinnedRaces));
         setRaces((prevRaces) => sortRaces(prevRaces));
 
+        // Set snackbar message based on pin status
         setSnackbarMessage(
             isPinned
                 ? 'Race un-pinned and moved to its original position!'
                 : 'Race pinned and moved to the beginning!'
         );
-
-        setSnackbarOpen(true);
+        setSnackbarOpen(true); // Show snackbar with action feedback
     };
 
+    // Navigate to race details on row click
     const handleRowClick = (race: Race) => {
         navigate(`/season/race/${seasonId}/${race.round}`);
     };
 
+    // Retrieve pinned races for the current season from localStorage
     const pinnedRaces = JSON.parse(localStorage.getItem(getPinnedRacesKey()) || '[]');
 
     return (
         <div className={classes.root}>
+            {/* Breadcrumb navigation */}
             <Breadcrumb
                 links={[{ label: 'Seasons', path: '/' }]}
                 currentPage={`Season ${seasonId}`}
             />
+
+            {/* Page title */}
             <Typography variant="h4" component="h1" className={classes.header}>
                 Races for Season {seasonId}
             </Typography>
 
+            {/* View mode toggle and subtitle */}
             {!error && (
                 <div className={classes.toggleContainer}>
                     <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary }}>Select a race to view details.</Typography>
@@ -148,6 +167,7 @@ const RacesForSeason: React.FC = () => {
                 </div>
             )}
 
+            {/* Conditional rendering for loading, error, or content display */}
             {loading ? (
                 <Box className={classes.loadingContainer}>
                     <CircularProgress color="primary" />
@@ -166,6 +186,7 @@ const RacesForSeason: React.FC = () => {
                     No races available for this season.
                 </Typography>
             ) : viewMode === 'list' ? (
+                // Render list view if selected
                 <SeasonRacesTable
                     races={races}
                     onRowClick={handleRowClick}
@@ -173,6 +194,7 @@ const RacesForSeason: React.FC = () => {
                     pinnedRaces={pinnedRaces}
                 />
             ) : (
+                // Render card view if selected, with animation and pagination
                 <div className={`${classes.animationContainer} ${animationClass}`}>
                     <Grid2 container spacing={3} justifyContent="center" style={{ padding: '8px' }}>
                         {races.slice((currentPage - 1) * 4, currentPage * 4).map((race) => (
@@ -184,12 +206,14 @@ const RacesForSeason: React.FC = () => {
                 </div>
             )}
 
+            {/* Pagination controls for card view */}
             {viewMode === 'card' && !error && (
                 <Box className={classes.paginationContainer}>
                     <Pagination count={Math.ceil(races.length / 4)} page={currentPage} onChange={handlePageChange} color="primary" />
                 </Box>
             )}
 
+            {/* Snackbar to display messages on pin/unpin actions */}
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={3000}
