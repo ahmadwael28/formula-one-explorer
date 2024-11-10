@@ -1,9 +1,10 @@
 // src/components/raceResultsTable/RaceResultsTable.tsx
 
 import React from 'react';
-import { TableCell } from '@mui/material';
+import { TableCell, Box, Typography } from '@mui/material';
 import PaginatedTable from '../common/paginatedTable/PaginatedTable';
 import moment from 'moment';
+import nationalityToCountryCode from './nationalityToCountryCode';
 
 interface Driver {
     position: string;
@@ -31,16 +32,30 @@ const RaceResultsTable: React.FC<RaceResultsTableProps> = ({ drivers }) => {
         return moment.utc(duration.asMilliseconds()).format('H:mm:ss.SSS');
     };
 
-    const renderRow = (driver: Driver, index: number) => (
-        <>
-            <TableCell>{index + 1}</TableCell>
-            <TableCell>{formatPosition(driver.position)}</TableCell>
-            <TableCell>{`${driver.Driver.givenName} ${driver.Driver.familyName}`}</TableCell>
-            <TableCell>{driver.Driver.nationality}</TableCell>
-            <TableCell>{driver.Constructor.name}</TableCell>
-            <TableCell>{driver.Time?.millis ? formatMillisToTime(driver.Time.millis) : 'N/A'}</TableCell>
-        </>
-    );
+    const renderRow = (driver: Driver, index: number) => {
+        const countryCode = nationalityToCountryCode[driver.Driver.nationality];
+        return (
+            <>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{formatPosition(driver.position)}</TableCell>
+                <TableCell>{`${driver.Driver.givenName} ${driver.Driver.familyName}`}</TableCell>
+                <TableCell>
+                    <Box display="flex" alignItems="center">
+                        {countryCode && (
+                            <img
+                                src={`https://flagcdn.com/16x12/${countryCode}.png`}
+                                alt={`${driver.Driver.nationality} flag`}
+                                style={{ marginRight: '8px' }}
+                            />
+                        )}
+                        <Typography variant="body2">{driver.Driver.nationality}</Typography>
+                    </Box>
+                </TableCell>
+                <TableCell>{driver.Constructor.name}</TableCell>
+                <TableCell>{driver.Time?.millis ? formatMillisToTime(driver.Time.millis) : 'N/A'}</TableCell>
+            </>
+        );
+    };
 
     return (
         <PaginatedTable
