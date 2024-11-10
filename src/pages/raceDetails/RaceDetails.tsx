@@ -8,6 +8,7 @@ import { fetchRaceResults } from '../../api/api';
 import RaceResultsTable from '../../components/raceREsultsTable/RaceResultsTable';
 import PerformanceChart from '../../components/performanceChart/PerformanceChart';
 import Breadcrumb from '../../components/common/breadCrumb/Breadcrumb';
+import useStyles from './styles';
 
 interface Driver {
     position: string;
@@ -25,6 +26,7 @@ const RaceDetails: React.FC = () => {
     const [viewMode, setViewMode] = useState<'list' | 'chart'>('list');
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const classes = useStyles();
 
     const loadRaceResults = async () => {
         setLoading(true);
@@ -59,8 +61,7 @@ const RaceDetails: React.FC = () => {
         }));
 
     return (
-        <Box style={{ paddingTop: '1rem', color: theme.palette.text.primary }}>
-            {/* Breadcrumb Navigation */}
+        <Box className={classes.root}>
             <Breadcrumb
                 links={[
                     { label: 'Seasons', path: '/' },
@@ -69,32 +70,14 @@ const RaceDetails: React.FC = () => {
                 currentPage={`Race Details - Round ${round}`}
             />
 
-            {/* Title */}
-            <Typography
-                variant="h4"
-                component="h1"
-                style={{
-                    fontSize: '52px',
-                    fontWeight: 'bold',
-                    marginBottom: '8px',
-                    color: '#ffffff',
-                    textAlign: isSmallScreen ? 'center' : 'left',
-                }}
-            >
+            <Typography variant="h4" component="h1" className={classes.title}>
                 Race Details - Season {seasonId}, Round {round}
             </Typography>
 
             {!error ? (
                 <>
-                    <Box
-                        display="flex"
-                        justifyContent={isSmallScreen ? 'center' : 'space-between'}
-                        alignItems="center"
-                        flexDirection={isSmallScreen ? 'column' : 'row'}
-                        marginBottom="16px"
-                        textAlign={isSmallScreen ? 'center' : 'left'}
-                    >
-                        <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary, marginBottom: isSmallScreen ? '8px' : '0' }}>
+                    <Box className={classes.toggleContainer}>
+                        <Typography variant="subtitle1" className={classes.subtitle}>
                             Participating Drivers
                         </Typography>
 
@@ -103,9 +86,6 @@ const RaceDetails: React.FC = () => {
                             exclusive
                             onChange={handleViewChange}
                             aria-label="view mode"
-                            style={{
-                                marginTop: isSmallScreen ? '8px' : 0,
-                            }}
                         >
                             <ToggleButton value="list" aria-label="list view">
                                 <ListIcon />
@@ -117,19 +97,19 @@ const RaceDetails: React.FC = () => {
                     </Box>
 
                     {loading ? (
-                        <Box display="flex" justifyContent="center" alignItems="center" style={{ height: '50vh' }}>
+                        <Box className={classes.loadingContainer}>
                             <CircularProgress color="primary" />
                         </Box>
                     ) : viewMode === 'list' ? (
                         <RaceResultsTable drivers={drivers} />
                     ) : (
-                        <Box display="flex" justifyContent="center">
+                        <Box className={classes.chartContainer}>
                             <PerformanceChart data={chartData} formatMillisToTime={(millis) => moment.utc(moment.duration(parseInt(millis, 10)).asMilliseconds()).format('H:mm:ss.SSS')} />
                         </Box>
                     )}
                 </>
             ) : (
-                <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" style={{ height: '60vh', textAlign: 'center' }}>
+                <Box className={classes.errorContainer}>
                     <Typography variant="h6" color="error" gutterBottom>
                         Failed to load race results. Please try again later.
                     </Typography>

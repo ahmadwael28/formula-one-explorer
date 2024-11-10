@@ -20,6 +20,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Breadcrumb from '../../components/common/breadCrumb/Breadcrumb';
 import RaceCard from '../../components/raceCard/RaceCard';
 import SeasonRacesTable from '../../components/seasonRacesTable/SeasonRacesTable';
+import useStyles from './styles';
 
 interface Race {
     round: string;
@@ -39,6 +40,7 @@ interface Race {
 const RacesForSeason: React.FC = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const classes = useStyles();
     const { seasonId } = useParams<{ seasonId: string }>();
     const navigate = useNavigate();
     const [races, setRaces] = useState<Race[]>([]);
@@ -129,19 +131,19 @@ const RacesForSeason: React.FC = () => {
     const pinnedRaces = JSON.parse(localStorage.getItem(getPinnedRacesKey()) || '[]');
 
     return (
-        <div style={{ color: theme.palette.text.primary, paddingTop: '1rem', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflowY: 'hidden' }}>
+        <div className={classes.root}>
             <Breadcrumb
                 links={[{ label: 'Seasons', path: '/' }]}
                 currentPage={`Season ${seasonId}`}
             />
-            <Typography variant="h4" component="h1" style={{ fontSize: '52px', fontWeight: 'bold', color: theme.palette.text.secondary, marginBottom: '8px', textAlign: isSmallScreen ? 'center' : 'left' }}>
+            <Typography variant="h4" component="h1" className={classes.header}>
                 Races for Season {seasonId}
             </Typography>
 
             {!error && (
-                <div style={{ display: 'flex', flexDirection: isSmallScreen ? 'column' : 'row', justifyContent: isSmallScreen ? 'center' : 'space-between', alignItems: 'center', marginBottom: '16px', textAlign: isSmallScreen ? 'center' : 'left' }}>
-                    <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary, marginBottom: isSmallScreen ? '8px' : '0' }}>Select a race to view details.</Typography>
-                    <ToggleButtonGroup value={viewMode} exclusive onChange={handleViewChange} aria-label="view mode" style={{ alignSelf: isSmallScreen ? 'center' : 'flex-end' }}>
+                <div className={classes.toggleContainer}>
+                    <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary }}>Select a race to view details.</Typography>
+                    <ToggleButtonGroup value={viewMode} exclusive onChange={handleViewChange} aria-label="view mode">
                         <ToggleButton value="list" aria-label="list view"><ListIcon /></ToggleButton>
                         <ToggleButton value="card" aria-label="card view"><GridViewIcon /></ToggleButton>
                     </ToggleButtonGroup>
@@ -149,11 +151,11 @@ const RacesForSeason: React.FC = () => {
             )}
 
             {loading ? (
-                <Box display="flex" justifyContent="center" alignItems="center" style={{ flexGrow: 1 }}>
+                <Box className={classes.loadingContainer}>
                     <CircularProgress color="primary" />
                 </Box>
             ) : error ? (
-                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{ flexGrow: 1 }}>
+                <Box className={classes.errorContainer}>
                     <Typography variant="h6" style={{ color: theme.palette.error.main, marginBottom: '16px' }}>
                         {error}
                     </Typography>
@@ -173,7 +175,7 @@ const RacesForSeason: React.FC = () => {
                     pinnedRaces={pinnedRaces}
                 />
             ) : (
-                <div className={animationClass} style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.5s ease', height: 'calc(100vh - 360px)', overflowY: 'auto' }}>
+                <div className={`${classes.animationContainer} ${animationClass}`}>
                     <Grid2 container spacing={3} justifyContent="center" style={{ padding: '8px' }}>
                         {races.slice((currentPage - 1) * 4, currentPage * 4).map((race) => (
                             <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={race.raceName}>
@@ -185,7 +187,7 @@ const RacesForSeason: React.FC = () => {
             )}
 
             {viewMode === 'card' && !error && (
-                <Box display="flex" justifyContent="center" marginTop="16px">
+                <Box className={classes.paginationContainer}>
                     <Pagination count={Math.ceil(races.length / 4)} page={currentPage} onChange={handlePageChange} color="primary" />
                 </Box>
             )}
@@ -197,15 +199,7 @@ const RacesForSeason: React.FC = () => {
                 message={snackbarMessage}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 TransitionComponent={(props) => <Slide {...props} direction="down" />}
-                sx={{
-                    '& .MuiSnackbarContent-root': {
-                        backdropFilter: 'blur(10px)',
-                        color: theme.palette.text.primary,
-                        fontWeight: 'bold',
-                        borderRadius: '8px',
-                        padding: '8px 16px',
-                    },
-                }}
+                classes={{ root: classes.snackbarContent }}
             />
         </div>
     );

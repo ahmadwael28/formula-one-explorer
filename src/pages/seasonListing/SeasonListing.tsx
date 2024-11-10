@@ -16,6 +16,7 @@ import {
 import ListIcon from '@mui/icons-material/List';
 import GridViewIcon from '@mui/icons-material/GridView';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import useStyles from './styles';
 
 interface Season {
     season: string;
@@ -25,6 +26,7 @@ interface Season {
 const SeasonListing: React.FC = () => {
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const classes = useStyles();
 
     const [seasons, setSeasons] = useState<Season[]>([]);
     const [totalSeasons, setTotalSeasons] = useState(0);
@@ -80,43 +82,15 @@ const SeasonListing: React.FC = () => {
     const totalPages = Math.ceil(totalSeasons / seasonsPerPage);
 
     return (
-        <div style={{ color: theme.palette.text.primary, paddingTop: '1rem', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: "border-box", overflowY: "hidden" }}>
-            <Breadcrumb
-                links={[]}
-                currentPage="Seasons"
-            />
-            <Typography
-                variant="h4"
-                component="h1"
-                style={{
-                    fontSize: '52px',
-                    fontWeight: 'bold',
-                    color: theme.palette.text.secondary,
-                    marginBottom: '8px',
-                    textAlign: isSmallScreen ? 'center' : 'left',
-                }}
-            >
+        <div className={classes.root}>
+            <Breadcrumb links={[]} currentPage="Seasons" />
+            <Typography variant="h4" component="h1" className={classes.title}>
                 Seasons
             </Typography>
 
             {!error && (
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: isSmallScreen ? 'column' : 'row',
-                        justifyContent: isSmallScreen ? 'center' : 'space-between',
-                        alignItems: 'center',
-                        marginBottom: '16px',
-                        textAlign: isSmallScreen ? 'center' : 'left',
-                    }}
-                >
-                    <Typography
-                        variant="subtitle1"
-                        style={{
-                            color: theme.palette.text.secondary,
-                            marginBottom: isSmallScreen ? '8px' : '0',
-                        }}
-                    >
+                <div className={classes.toggleContainer}>
+                    <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary }}>
                         Select a season to view its races.
                     </Typography>
                     <ToggleButtonGroup
@@ -124,9 +98,7 @@ const SeasonListing: React.FC = () => {
                         exclusive
                         onChange={handleViewChange}
                         aria-label="view mode"
-                        style={{
-                            alignSelf: isSmallScreen ? 'center' : 'flex-end',
-                        }}
+                        className={classes.toggleButtonGroup}
                     >
                         <ToggleButton value="list" aria-label="list view">
                             <ListIcon />
@@ -139,33 +111,24 @@ const SeasonListing: React.FC = () => {
             )}
 
             {loading ? (
-                <Box display="flex" justifyContent="center" alignItems="center" style={{ height: 'calc(100vh - 295px)' }}>
+                <Box className={classes.loadingContainer}>
                     <CircularProgress color="primary" />
                 </Box>
             ) : error ? (
-                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{ flexGrow: 1 }}>
-                    <Typography variant="h6" style={{ color: theme.palette.error.main, marginBottom: '16px', textAlign: 'center' }}>
+                <Box className={classes.errorContainer}>
+                    <Typography variant="h6" style={{ color: theme.palette.error.main }}>
                         {error}
                     </Typography>
                 </Box>
             ) : (
-                <div
-                    className={animationClass}
-                    style={{
-                        display: loading ? 'none' : 'flex',
-                        flexDirection: 'column',
-                        transition: 'opacity 0.5s ease',
-                        height: 'calc(100vh - 295px)',
-                        overflowY: 'auto',
-                    }}
-                >
+                <div className={`${classes.listContainer} ${animationClass}`}>
                     {viewMode === 'list' ? (
                         <SeasonList seasons={seasons} />
                     ) : (
-                        <Grid2 container spacing={3} justifyContent="center" style={{ padding: '8px', overflowY: "auto" }}>
+                        <Grid2 container spacing={3} justifyContent="center" style={{ padding: '8px' }}>
                             {seasons.map((season, index) => (
                                 <Grid2 size={{ xs: 6, sm: 6, md: 4, lg: 2.4 }} key={season.season}>
-                                    <SeasonCard season={season} index={index} /> {/* Pass index */}
+                                    <SeasonCard season={season} index={index} />
                                 </Grid2>
                             ))}
                         </Grid2>
@@ -174,13 +137,8 @@ const SeasonListing: React.FC = () => {
             )}
 
             {!error && (
-                <Box display="flex" justifyContent="center" marginTop="16px">
-                    <Pagination
-                        count={totalPages}
-                        page={currentPage}
-                        onChange={handlePageChange}
-                        color="primary"
-                    />
+                <Box className={classes.paginationContainer}>
+                    <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} color="primary" />
                 </Box>
             )}
         </div>
