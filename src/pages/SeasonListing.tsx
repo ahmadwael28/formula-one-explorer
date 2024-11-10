@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchSeasons } from '../api/api';
 import SeasonCard from '../components/seasonCard/SeasonCard';
 import SeasonList from '../components/seasonList/SeasonList';
-import Breadcrumb from '../components/common/Breadcrumb';
+import Breadcrumb from '../components/common/breadCrumb/Breadcrumb';
 import {
     ToggleButton,
     ToggleButtonGroup,

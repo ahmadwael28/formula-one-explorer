@@ -17,7 +17,7 @@ import {
 import ListIcon from '@mui/icons-material/List';
 import GridViewIcon from '@mui/icons-material/GridView';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Breadcrumb from '../components/common/Breadcrumb';
+import Breadcrumb from '../components/common/breadCrumb/Breadcrumb';
 import RaceCard from '../components/raceCard/RaceCard';
 import SeasonRacesTable from '../components/seasonRacesTable/SeasonRacesTable';
 

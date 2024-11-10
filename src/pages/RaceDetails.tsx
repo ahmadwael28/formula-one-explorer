@@ -7,7 +7,7 @@ import moment from 'moment';
 import { fetchRaceResults } from '../api/api';
 import RaceResultsTable from '../components/raceREsultsTable/RaceResultsTable';
 import PerformanceChart from '../components/performanceChart/PerformanceChart';
-import Breadcrumb from '../components/common/Breadcrumb';
+import Breadcrumb from '../components/common/breadCrumb/Breadcrumb';
 
 interface Driver {
     position: string;
