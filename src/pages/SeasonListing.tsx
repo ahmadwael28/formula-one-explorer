@@ -15,7 +15,7 @@ interface Season {
 
 const SeasonListing: React.FC = () => {
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm')); // Media query for mobile view
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [seasons, setSeasons] = useState<Season[]>([]);
     const [totalSeasons, setTotalSeasons] = useState(0);
@@ -23,18 +23,23 @@ const SeasonListing: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [animationClass, setAnimationClass] = useState<string>('');
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const seasonsPerPage = 10;
 
     const fetchAndSetSeasons = async (page: number) => {
         setLoading(true);
+        setError(null);
         setAnimationClass('fade-out');
         setTimeout(async () => {
             const offset = (page - 1) * seasonsPerPage;
             try {
                 const { seasons, total } = await fetchSeasons(seasonsPerPage, offset);
-                setSeasons(seasons);
-                setTotalSeasons(total);
-
+                if (seasons.length === 0) {
+                    setError('No seasons found.');
+                } else {
+                    setSeasons(seasons);
+                    setTotalSeasons(total);
+                }
                 setAnimationClass('');
                 setTimeout(() => {
                     setAnimationClass('slide-in');
@@ -42,6 +47,8 @@ const SeasonListing: React.FC = () => {
                 }, 50);
             } catch (error) {
                 console.error("Failed to fetch seasons data:", error);
+                setError("Failed to fetch seasons data. Please try again later.");
+                setLoading(false);
             }
         }, 300);
     };
@@ -64,7 +71,7 @@ const SeasonListing: React.FC = () => {
     const totalPages = Math.ceil(totalSeasons / seasonsPerPage);
 
     return (
-        <div style={{ color: theme.palette.text.primary, padding: '1rem', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflowY: "hidden" }}>
+        <div style={{ color: theme.palette.text.primary, paddingTop: '1rem', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: "border-box", overflowY: "hidden" }}>
             {/* Title */}
             <Typography
                 variant="h4"
@@ -80,43 +87,44 @@ const SeasonListing: React.FC = () => {
                 Seasons
             </Typography>
 
-            {/* Subtitle and Toggle Button */}
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: isSmallScreen ? 'column' : 'row', // Stack vertically on small screens
-                    justifyContent: isSmallScreen ? 'center' : 'space-between',
-                    alignItems: 'center',
-                    marginBottom: '16px',
-                    textAlign: isSmallScreen ? 'center' : 'left',
-                }}
-            >
-                <Typography
-                    variant="subtitle1"
+            {!error && (
+                <div
                     style={{
-                        color: theme.palette.text.secondary,
-                        marginBottom: isSmallScreen ? '8px' : '0', // Add space below subtitle on small screens
+                        display: 'flex',
+                        flexDirection: isSmallScreen ? 'column' : 'row',
+                        justifyContent: isSmallScreen ? 'center' : 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '16px',
+                        textAlign: isSmallScreen ? 'center' : 'left',
                     }}
                 >
-                    Select a season to view its races.
-                </Typography>
-                <ToggleButtonGroup
-                    value={viewMode}
-                    exclusive
-                    onChange={handleViewChange}
-                    aria-label="view mode"
-                    style={{
-                        alignSelf: isSmallScreen ? 'center' : 'flex-end', // Center-align on small screens
-                    }}
-                >
-                    <ToggleButton value="list" aria-label="list view">
-                        <ListIcon />
-                    </ToggleButton>
-                    <ToggleButton value="card" aria-label="card view">
-                        <GridViewIcon />
-                    </ToggleButton>
-                </ToggleButtonGroup>
-            </div>
+                    <Typography
+                        variant="subtitle1"
+                        style={{
+                            color: theme.palette.text.secondary,
+                            marginBottom: isSmallScreen ? '8px' : '0',
+                        }}
+                    >
+                        Select a season to view its races.
+                    </Typography>
+                    <ToggleButtonGroup
+                        value={viewMode}
+                        exclusive
+                        onChange={handleViewChange}
+                        aria-label="view mode"
+                        style={{
+                            alignSelf: isSmallScreen ? 'center' : 'flex-end',
+                        }}
+                    >
+                        <ToggleButton value="list" aria-label="list view">
+                            <ListIcon />
+                        </ToggleButton>
+                        <ToggleButton value="card" aria-label="card view">
+                            <GridViewIcon />
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </div>
+            )}
 
             {/* Loading Spinner */}
             {loading && (
@@ -125,39 +133,47 @@ const SeasonListing: React.FC = () => {
                 </Box>
             )}
 
-            {/* Responsive Grid for Card/List View */}
-            <div
-                className={animationClass}
-                style={{
-                    display: loading ? 'none' : 'flex',
-                    flexDirection: 'column',
-                    transition: 'opacity 0.5s ease',
-                    height: 'calc(100vh - 200px)',
-                    overflowY: 'auto',
-                }}
-            >
-                {viewMode === 'list' ? (
-                    <SeasonList seasons={seasons} />
-                ) : (
-                    <Grid2 container spacing={3} justifyContent="center" style={{ padding: '8px', overflowY: "auto" }}>
-                        {seasons.map((season) => (
-                            <Grid2 size={{ xs: 6, sm: 6, md: 4, lg: 2.4 }} key={season.season}>
-                                <SeasonCard season={season} />
-                            </Grid2>
-                        ))}
-                    </Grid2>
-                )}
-            </div>
+            {error ? (
+                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{ flexGrow: 1 }}>
+                    <Typography variant="h6" style={{ color: theme.palette.error.main, marginBottom: '16px', textAlign: 'center' }}>
+                        {error}
+                    </Typography>
+                </Box>
+            ) : (
+                <div
+                    className={animationClass}
+                    style={{
+                        display: loading ? 'none' : 'flex',
+                        flexDirection: 'column',
+                        transition: 'opacity 0.5s ease',
+                        height: 'calc(100vh - 264px)',
+                        overflowY: 'auto',
+                    }}
+                >
+                    {viewMode === 'list' ? (
+                        <SeasonList seasons={seasons} />
+                    ) : (
+                        <Grid2 container spacing={3} justifyContent="center" style={{ padding: '8px', overflowY: "auto" }}>
+                            {seasons.map((season) => (
+                                <Grid2 size={{ xs: 6, sm: 6, md: 4, lg: 2.4 }} key={season.season}>
+                                    <SeasonCard season={season} />
+                                </Grid2>
+                            ))}
+                        </Grid2>
+                    )}
+                </div>
+            )}
 
-            {/* Centered Pagination */}
-            <Box display="flex" justifyContent="center" marginTop="16px">
-                <Pagination
-                    count={totalPages}
-                    page={currentPage}
-                    onChange={handlePageChange}
-                    color="primary"
-                />
-            </Box>
+            {!error && (
+                <Box display="flex" justifyContent="center" marginTop="16px">
+                    <Pagination
+                        count={totalPages}
+                        page={currentPage}
+                        onChange={handlePageChange}
+                        color="primary"
+                    />
+                </Box>
+            )}
         </div>
     );
 };

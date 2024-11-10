@@ -26,7 +26,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data, formatMillisT
     const theme = useTheme();
 
     return (
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={500}>
             <BarChart data={data} layout="vertical" barSize={20}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis

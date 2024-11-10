@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Typography, CircularProgress, Box, TableCell, ToggleButton, ToggleButtonGroup, useTheme, useMediaQuery } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Typography, CircularProgress, Box, TableCell, ToggleButton, ToggleButtonGroup, Button, useTheme, useMediaQuery } from '@mui/material';
 import ListIcon from '@mui/icons-material/List';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import moment from 'moment';
@@ -17,19 +17,27 @@ interface Driver {
 
 const RaceDetails: React.FC = () => {
     const { seasonId, round } = useParams<{ seasonId: string; round: string }>();
+    const navigate = useNavigate();
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [drivers, setDrivers] = useState<Driver[]>([]);
     const [loading, setLoading] = useState(true);
     const [viewMode, setViewMode] = useState<'list' | 'chart'>('list');
-    const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const [error, setError] = useState<string | null>(null);
 
     const loadRaceResults = async () => {
         setLoading(true);
+        setError(null);
         try {
             const results = await fetchRaceResults(seasonId!, round!);
-            setDrivers(results);
+            if (results.length === 0) {
+                setError('No results found for this race.');
+            } else {
+                setDrivers(results);
+            }
         } catch (error) {
             console.error("Failed to fetch race results:", error);
+            setError("Failed to load race details. Please try again later.");
         } finally {
             setLoading(false);
         }
@@ -78,8 +86,10 @@ const RaceDetails: React.FC = () => {
             formattedTime: formatMillisToTime(driver.Time!.millis),
         }));
 
+    const handleGoHome = () => navigate('/');
+
     return (
-        <Box style={{ paddingTop: '1rem', color: theme.palette.text.primary }}>
+        <Box style={{ paddingTop: '1rem', color: theme.palette.text.primary, height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Typography
                 variant="h4"
                 component="h1"
@@ -89,53 +99,74 @@ const RaceDetails: React.FC = () => {
                     marginBottom: '8px',
                     color: '#ffffff',
                     textAlign: isSmallScreen ? 'center' : 'left',
+                    alignSelf: isSmallScreen ? 'center' : 'flex-start',
                 }}
             >
                 Race Details - Season {seasonId}, Round {round}
             </Typography>
-            <Box
-                display="flex"
-                justifyContent={isSmallScreen ? 'center' : 'space-between'}
-                alignItems="center"
-                flexDirection={isSmallScreen ? 'column' : 'row'}
-                marginBottom="16px"
-                textAlign={isSmallScreen ? 'center' : 'left'}
-            >
-                <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary, marginBottom: isSmallScreen ? '8px' : '0' }}>Participating Drivers</Typography>
 
-                <ToggleButtonGroup
-                    value={viewMode}
-                    exclusive
-                    onChange={handleViewChange}
-                    aria-label="view mode"
-                    style={{
-                        marginTop: isSmallScreen ? '8px' : 0,
-                    }}
-                >
-                    <ToggleButton value="list" aria-label="list view">
-                        <ListIcon />
-                    </ToggleButton>
-                    <ToggleButton value="chart" aria-label="chart view">
-                        <BarChartIcon />
-                    </ToggleButton>
-                </ToggleButtonGroup>
-            </Box>
-            {loading ? (
-                <Box display="flex" justifyContent="center" alignItems="center" style={{ height: '50vh' }}>
-                    <CircularProgress color="primary" />
+            {error ? (
+                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{ flexGrow: 1 }}>
+                    <Typography variant="h6" style={{ color: theme.palette.error.main, textAlign: 'center', marginBottom: '16px' }}>
+                        {error}
+                    </Typography>
+                    <Button variant="contained" color="primary" onClick={handleGoHome}>
+                        Go to Home
+                    </Button>
                 </Box>
-            ) : viewMode === 'list' ? (
-                <PaginatedTable
-                    headers={headers}
-                    data={drivers}
-                    rowsPerPage={10}
-                    renderRow={(driver, index) => renderRow(driver, index)}
-                    fixedHeight={500}
-                />
             ) : (
-                <Box display="flex" justifyContent="center">
-                    <PerformanceChart data={chartData} formatMillisToTime={formatMillisToTime} />
-                </Box>
+                <>
+                    {!loading && (
+                        <Box
+                            display="flex"
+                            justifyContent={isSmallScreen ? 'center' : 'space-between'}
+                            alignItems="center"
+                            flexDirection={isSmallScreen ? 'column' : 'row'}
+                            marginBottom="16px"
+                            textAlign={isSmallScreen ? 'center' : 'left'}
+                            width="100%"
+                        >
+                            <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary, marginBottom: isSmallScreen ? '8px' : '0', alignSelf: isSmallScreen ? 'center' : 'flex-start' }}>
+                                Participating Drivers
+                            </Typography>
+
+                            <ToggleButtonGroup
+                                value={viewMode}
+                                exclusive
+                                onChange={handleViewChange}
+                                aria-label="view mode"
+                                style={{
+                                    alignSelf: isSmallScreen ? 'center' : 'flex-end',
+                                }}
+                            >
+                                <ToggleButton value="list" aria-label="list view">
+                                    <ListIcon />
+                                </ToggleButton>
+                                <ToggleButton value="chart" aria-label="chart view">
+                                    <BarChartIcon />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        </Box>
+                    )}
+
+                    {loading ? (
+                        <Box display="flex" justifyContent="center" alignItems="center" style={{ height: '50vh' }}>
+                            <CircularProgress color="primary" />
+                        </Box>
+                    ) : viewMode === 'list' ? (
+                        <PaginatedTable
+                            headers={headers}
+                            data={drivers}
+                            rowsPerPage={10}
+                            renderRow={(driver, index) => renderRow(driver, index)}
+                            fixedHeight={500}
+                        />
+                    ) : (
+                        <Box display="flex" justifyContent="center" style={{ width: '100%', height: '500px' }}>
+                            <PerformanceChart data={chartData} formatMillisToTime={formatMillisToTime} />
+                        </Box>
+                    )}
+                </>
             )}
         </Box>
     );

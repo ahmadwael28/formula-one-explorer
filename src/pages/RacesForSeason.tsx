@@ -10,6 +10,7 @@ import {
     Grid2,
     Snackbar,
     Slide,
+    Button,
     useTheme,
     Pagination,
 } from '@mui/material';
@@ -42,6 +43,7 @@ const RacesForSeason: React.FC = () => {
     const [races, setRaces] = useState<Race[]>([]);
     const [viewMode, setViewMode] = useState<'list' | 'card'>('card');
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
@@ -63,12 +65,18 @@ const RacesForSeason: React.FC = () => {
     const loadAndSortRaces = async () => {
         if (!seasonId) return;
         setLoading(true);
+        setError(null);
         try {
             const { races } = await fetchRacesForSeason(seasonId);
-            setRaces(sortRaces(races));
+            if (races.length === 0) {
+                setError(`No races found for season ${seasonId}.`);
+            } else {
+                setRaces(sortRaces(races));
+            }
             setLoading(false);
         } catch (error) {
             console.error('Failed to fetch race data:', error);
+            setError('Failed to fetch race data. Please try again later.');
             setLoading(false);
         }
     };
@@ -104,7 +112,6 @@ const RacesForSeason: React.FC = () => {
         localStorage.setItem(pinnedRacesKey, JSON.stringify(updatedPinnedRaces));
         setRaces((prevRaces) => sortRaces(prevRaces));
 
-        // Set the appropriate message based on pin or unpin action
         setSnackbarMessage(
             isPinned
                 ? 'Race un-pinned and moved to its original position!'
@@ -121,23 +128,38 @@ const RacesForSeason: React.FC = () => {
     const pinnedRaces = JSON.parse(localStorage.getItem(getPinnedRacesKey()) || '[]');
 
     return (
-        <div style={{ color: theme.palette.text.primary, paddingTop: `1rem`, height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflowY: 'hidden' }}>
+        <div style={{ color: theme.palette.text.primary, paddingTop: '1rem', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflowY: 'hidden' }}>
             <Typography variant="h4" component="h1" style={{ fontSize: '52px', fontWeight: 'bold', color: theme.palette.text.secondary, marginBottom: '8px', textAlign: isSmallScreen ? 'center' : 'left' }}>
                 Races for Season {seasonId}
             </Typography>
 
-            <div style={{ display: 'flex', flexDirection: isSmallScreen ? 'column' : 'row', justifyContent: isSmallScreen ? 'center' : 'space-between', alignItems: 'center', marginBottom: '16px', textAlign: isSmallScreen ? 'center' : 'left' }}>
-                <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary, marginBottom: isSmallScreen ? '8px' : '0' }}>Select a race to view details.</Typography>
-                <ToggleButtonGroup value={viewMode} exclusive onChange={handleViewChange} aria-label="view mode" style={{ alignSelf: isSmallScreen ? 'center' : 'flex-end' }}>
-                    <ToggleButton value="list" aria-label="list view"><ListIcon /></ToggleButton>
-                    <ToggleButton value="card" aria-label="card view"><GridViewIcon /></ToggleButton>
-                </ToggleButtonGroup>
-            </div>
+            {!error && (
+                <div style={{ display: 'flex', flexDirection: isSmallScreen ? 'column' : 'row', justifyContent: isSmallScreen ? 'center' : 'space-between', alignItems: 'center', marginBottom: '16px', textAlign: isSmallScreen ? 'center' : 'left' }}>
+                    <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary, marginBottom: isSmallScreen ? '8px' : '0' }}>Select a race to view details.</Typography>
+                    <ToggleButtonGroup value={viewMode} exclusive onChange={handleViewChange} aria-label="view mode" style={{ alignSelf: isSmallScreen ? 'center' : 'flex-end' }}>
+                        <ToggleButton value="list" aria-label="list view"><ListIcon /></ToggleButton>
+                        <ToggleButton value="card" aria-label="card view"><GridViewIcon /></ToggleButton>
+                    </ToggleButtonGroup>
+                </div>
+            )}
 
             {loading ? (
                 <Box display="flex" justifyContent="center" alignItems="center" style={{ flexGrow: 1 }}>
                     <CircularProgress color="primary" />
                 </Box>
+            ) : error ? (
+                <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{ flexGrow: 1 }}>
+                    <Typography variant="h6" style={{ color: theme.palette.error.main, marginBottom: '16px' }}>
+                        {error}
+                    </Typography>
+                    <Button variant="outlined" color="primary" onClick={() => navigate('/')}>
+                        Go Back to Home
+                    </Button>
+                </Box>
+            ) : races.length === 0 ? (
+                <Typography variant="body1" color="textSecondary" textAlign="center" marginTop={4}>
+                    No races available for this season.
+                </Typography>
             ) : viewMode === 'list' ? (
                 <SeasonRacesTable
                     races={races}
@@ -157,7 +179,7 @@ const RacesForSeason: React.FC = () => {
                 </div>
             )}
 
-            {viewMode === 'card' && (
+            {viewMode === 'card' && !error && (
                 <Box display="flex" justifyContent="center" marginTop="16px">
                     <Pagination count={Math.ceil(races.length / 4)} page={currentPage} onChange={handlePageChange} color="primary" />
                 </Box>
