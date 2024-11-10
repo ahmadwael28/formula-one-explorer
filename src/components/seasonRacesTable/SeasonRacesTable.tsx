@@ -53,12 +53,12 @@ const SeasonRacesTable: React.FC<SeasonRacesTableProps> = ({ races, onRowClick, 
                     </IconButton>
                 </Tooltip>
                 <Tooltip title="View Details">
-                    <IconButton onClick={() => window.open(race.url, '_blank', 'noopener,noreferrer')}>
+                    <IconButton onClick={(e) => { e.stopPropagation(); window.open(race.url, '_blank', 'noopener,noreferrer') }}>
                         <OpenInNewIcon />
                     </IconButton>
                 </Tooltip>
                 <Tooltip title="View on Map">
-                    <IconButton onClick={() => window.open(googleMapsUrl, '_blank', 'noopener,noreferrer')}>
+                    <IconButton onClick={(e) => { e.stopPropagation(); window.open(googleMapsUrl, '_blank', 'noopener,noreferrer') }}>
                         <MapIcon />
                     </IconButton>
                 </Tooltip>
