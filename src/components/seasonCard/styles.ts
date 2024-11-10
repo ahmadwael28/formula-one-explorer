@@ -6,7 +6,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     card: {
         position: 'relative',
         width: '100%',
-        maxWidth: '325px',
+        maxWidth: '290',
         aspectRatio: '1 / 1',
         margin: 'auto',
         cursor: 'pointer',
