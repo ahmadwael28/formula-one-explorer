@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     imageContainer: {
         width: '100px',
         height: '100%',
-        backgroundImage: 'url(/assets/RaceFlag.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         borderRadius: '8px 0 0 8px',

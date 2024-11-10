@@ -1,9 +1,9 @@
 // src/routes/AppRoutes.tsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import SeasonListing from '../pages/SeasonListing';
-import RacesForSeason from '../pages/RacesForSeason';
-import RaceDetails from '../pages/RaceDetails';
+import SeasonListing from '../pages/seasonListing/SeasonListing';
+import RacesForSeason from '../pages/racesForSeason/RacesForSeason';
+import RaceDetails from '../pages/raceDetails/RaceDetails';
 import NotFound from '../pages/NotFound';
 
 const AppRoutes: React.FC = () => {

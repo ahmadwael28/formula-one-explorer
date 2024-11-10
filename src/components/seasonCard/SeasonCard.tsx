@@ -1,15 +1,16 @@
-// src/components/seasonCard/SeasonCard.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStyles } from './styles';
 import { IconButton, Tooltip } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import seasonBackgroundImages from '../../pages/seasonListing/SeasonBackgroundImages';
 
 interface SeasonCardProps {
     season: { season: string; url: string };
+    index: number;
 }
 
-const SeasonCard: React.FC<SeasonCardProps> = ({ season }) => {
+const SeasonCard: React.FC<SeasonCardProps> = ({ season, index }) => {
     const classes = useStyles();
     const navigate = useNavigate();
 
@@ -18,13 +19,19 @@ const SeasonCard: React.FC<SeasonCardProps> = ({ season }) => {
     };
 
     const openWikipediaLink = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Prevent card click from triggering
-        window.open(season.url, '_blank', 'noopener,noreferrer'); // Open link in a new tab
+        e.stopPropagation();
+        window.open(season.url, '_blank', 'noopener,noreferrer');
     };
+
+    // Select background image based on index, cycling if more cards than images
+    const backgroundImage = seasonBackgroundImages[index % seasonBackgroundImages.length];
 
     return (
         <div onClick={handleCardClick} className={classes.card}>
-            <div className={classes.background} />
+            <div
+                className={classes.background}
+                style={{ backgroundImage: `url(${backgroundImage})` }}
+            />
             <div className={classes.overlay}>
                 <div className={classes.topSection}>
                     <span className={classes.seasonText}>{season.season}</span>

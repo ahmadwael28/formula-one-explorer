@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { fetchSeasons } from '../api/api';
-import SeasonCard from '../components/seasonCard/SeasonCard';
-import SeasonList from '../components/seasonList/SeasonList';
-import Breadcrumb from '../components/common/breadCrumb/Breadcrumb';
+import { fetchSeasons } from '../../api/api';
+import SeasonCard from '../../components/seasonCard/SeasonCard';
+import SeasonList from '../../components/seasonList/SeasonList';
+import Breadcrumb from '../../components/common/breadCrumb/Breadcrumb';
 import {
     ToggleButton,
     ToggleButtonGroup,
@@ -163,9 +163,9 @@ const SeasonListing: React.FC = () => {
                         <SeasonList seasons={seasons} />
                     ) : (
                         <Grid2 container spacing={3} justifyContent="center" style={{ padding: '8px', overflowY: "auto" }}>
-                            {seasons.map((season) => (
+                            {seasons.map((season, index) => (
                                 <Grid2 size={{ xs: 6, sm: 6, md: 4, lg: 2.4 }} key={season.season}>
-                                    <SeasonCard season={season} />
+                                    <SeasonCard season={season} index={index} /> {/* Pass index */}
                                 </Grid2>
                             ))}
                         </Grid2>

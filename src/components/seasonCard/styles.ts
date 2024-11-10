@@ -29,7 +29,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundImage: 'url(/assets/RaceFlag.jpg)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         transition: 'transform 0.3s ease-in-out',

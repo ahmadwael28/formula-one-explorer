@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import useStyles from './styles';
 import { IconButton, Tooltip, Box } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import seasonBackgroundImages from '../../pages/seasonListing/SeasonBackgroundImages';
 
 interface SeasonListProps {
     seasons: { season: string; url: string }[];
@@ -24,13 +25,13 @@ const SeasonList: React.FC<SeasonListProps> = ({ seasons }) => {
     return (
         <Box display="flex" justifyContent="center"> {/* Center align the list */}
             <ul className={classes.listContainer}>
-                {seasons.map((season) => (
+                {seasons.map((season, index) => (
                     <li
                         key={season.season}
                         className={classes.listItem}
                         onClick={() => handleSeasonClick(season.season)}
                     >
-                        <div className={classes.imageContainer} />
+                        <div className={classes.imageContainer} style={{ backgroundImage: `url(${seasonBackgroundImages[index % seasonBackgroundImages.length]})` }} />
                         <span className={classes.listItemText}>Season {season.season}</span>
                         <Tooltip title="Read more about this season" arrow placement="top">
                             <IconButton
