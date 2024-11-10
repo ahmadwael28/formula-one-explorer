@@ -1,5 +1,3 @@
-// src/components/raceResultsTable/RaceResultsTable.tsx
-
 import React from 'react';
 import { TableCell, Box, Typography } from '@mui/material';
 import PaginatedTable from '../common/paginatedTable/PaginatedTable';

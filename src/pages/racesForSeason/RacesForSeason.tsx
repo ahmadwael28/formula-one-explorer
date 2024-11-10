@@ -52,8 +52,6 @@ const RacesForSeason: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [animationClass, setAnimationClass] = useState<string>('');
 
-    const racesPerPage = viewMode === 'card' ? 4 : 10;
-
     const getPinnedRacesKey = () => `pinnedRaces_${seasonId}`;
 
     const sortRaces = (races: Race[]) => {

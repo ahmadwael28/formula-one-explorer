@@ -1,4 +1,3 @@
-// src/components/SeasonList/SeasonList.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStyles from './styles';
@@ -23,7 +22,7 @@ const SeasonList: React.FC<SeasonListProps> = ({ seasons }) => {
     };
 
     return (
-        <Box display="flex" justifyContent="center"> {/* Center align the list */}
+        <Box display="flex" justifyContent="center">
             <ul className={classes.listContainer}>
                 {seasons.map((season, index) => (
                     <li

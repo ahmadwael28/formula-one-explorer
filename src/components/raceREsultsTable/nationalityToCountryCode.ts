@@ -1,5 +1,3 @@
-// src/constants/nationalityToCountryCode.ts
-
 const nationalityToCountryCode: Record<string, string> = {
     American: 'us',
     Argentine: 'ar',
@@ -66,7 +64,6 @@ const nationalityToCountryCode: Record<string, string> = {
     Uruguayan: 'uy',
     Venezuelan: 've',
     Palastinian: "ps"
-    // Add more as needed
 };
 
 export default nationalityToCountryCode;

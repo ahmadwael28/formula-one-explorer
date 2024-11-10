@@ -1,4 +1,3 @@
-// src/components/seasonCard/styles.ts
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 
@@ -55,7 +54,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     seasonText: {
         fontWeight: 'bold',
         transition: 'transform 0.3s ease',
-        fontSize: '48px', // Default font size for large screens
+        fontSize: '48px',
         [theme.breakpoints.down('lg')]: {
             fontSize: '40px',
         },

@@ -13,10 +13,10 @@ const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
     return (
         <div
             style={{
-                height: '100vh', // Full viewport height
+                height: '100vh',
                 display: 'flex',
                 flexDirection: 'column',
-                backgroundImage: `url(${process.env.PUBLIC_URL}/assets/F1background.jpg)`, // Background image from public folder
+                backgroundImage: `url(${process.env.PUBLIC_URL}/assets/F1background.jpg)`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
@@ -30,7 +30,7 @@ const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)', // Dim overlay for background image
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
                     zIndex: 0,
                 }}
             />
@@ -39,7 +39,7 @@ const MainContainer: React.FC<MainContainerProps> = ({ children }) => {
                 style={{
                     position: 'relative',
                     zIndex: 1,
-                    padding: isMobileScreen ? '0 1rem' : '0 2rem', // Conditional padding for mobile screens
+                    padding: isMobileScreen ? '0 1rem' : '0 2rem',
                     flex: 1,
                 }}
             >

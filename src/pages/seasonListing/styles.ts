@@ -1,4 +1,3 @@
-// src/pages/seasonListing/styles.ts
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 

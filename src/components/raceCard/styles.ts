@@ -38,13 +38,13 @@ export const useStyles = makeStyles((theme: Theme) => ({
         right: 0,
         height: '66%',
         borderRadius: '8px',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Directly using expanded color
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
         color: 'white',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
         padding: '8px',
-        transform: 'translateY(-40%)', // Always expanded
+        transform: 'translateY(-40%)',
         transition: 'background-color 0.3s ease',
         overflow: 'hidden',
     },

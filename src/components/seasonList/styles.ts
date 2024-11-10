@@ -1,4 +1,3 @@
-// src/components/SeasonList/styles.ts
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 
@@ -6,8 +5,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     listContainer: {
         padding: '0 8px',
         margin: 0,
-        width: '100%', // Full width for center alignment
-        maxWidth: '600px', // Optional max-width to limit the width on larger screens
+        width: '100%',
+        maxWidth: '600px',
     },
     listItem: {
         display: 'flex',

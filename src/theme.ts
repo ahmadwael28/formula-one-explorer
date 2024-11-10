@@ -1,6 +1,5 @@
-// src/theme.ts
 import { createTheme } from '@mui/material/styles';
-import './theme'; // Ensure the custom theme definitions are loaded
+import './theme';
 
 const theme = createTheme({
     palette: {
@@ -20,7 +19,7 @@ const theme = createTheme({
             secondary: '#e0e0e0',
         },
         custom: {
-            darkIcon: '#333333', // Custom color for icons on light backgrounds
+            darkIcon: '#333333',
         },
     },
 });

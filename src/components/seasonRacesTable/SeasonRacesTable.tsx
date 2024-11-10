@@ -1,5 +1,3 @@
-// SeasonRacesTable.tsx
-
 import React from 'react';
 import { TableCell, IconButton, Tooltip } from '@mui/material';
 import PinIcon from '@mui/icons-material/PushPin';

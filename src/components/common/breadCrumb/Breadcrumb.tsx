@@ -8,7 +8,7 @@ export interface BreadcrumbLink {
 }
 
 export interface BreadcrumbProps {
-    links: BreadcrumbLink[]; // Ensure 'links' is part of props
+    links: BreadcrumbLink[];
     currentPage: string;
 }
 

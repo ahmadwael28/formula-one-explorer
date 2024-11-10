@@ -16,7 +16,7 @@ interface PaginatedTableProps<T> {
     rowsPerPage: number;
     renderRow: (item: T, index: number) => React.ReactNode;
     actions?: (item: T) => React.ReactNode;
-    onRowClick?: (item: T) => void;  // New prop for row click
+    onRowClick?: (item: T) => void;
     fixedHeight?: number;
 }
 
@@ -26,7 +26,7 @@ const PaginatedTable = <T extends unknown>({
     rowsPerPage: initialRowsPerPage,
     renderRow,
     actions,
-    onRowClick,  // New prop for row click
+    onRowClick,
     fixedHeight = 400,
 }: PaginatedTableProps<T>) => {
     const [page, setPage] = useState(0);
@@ -64,7 +64,7 @@ const PaginatedTable = <T extends unknown>({
                             <TableRow
                                 key={index}
                                 hover
-                                onClick={() => onRowClick?.(item)}  // Row click handling
+                                onClick={() => onRowClick?.(item)}
                                 style={{ cursor: onRowClick ? 'pointer' : 'default' }}
                             >
                                 {renderRow(item, index + page * rowsPerPage)}
