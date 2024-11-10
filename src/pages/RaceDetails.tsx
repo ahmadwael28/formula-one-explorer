@@ -7,6 +7,7 @@ import moment from 'moment';
 import { fetchRaceResults } from '../api/api';
 import RaceResultsTable from '../components/raceREsultsTable/RaceResultsTable';
 import PerformanceChart from '../components/performanceChart/PerformanceChart';
+import Breadcrumb from '../components/common/Breadcrumb';
 
 interface Driver {
     position: string;
@@ -59,6 +60,16 @@ const RaceDetails: React.FC = () => {
 
     return (
         <Box style={{ paddingTop: '1rem', color: theme.palette.text.primary }}>
+            {/* Breadcrumb Navigation */}
+            <Breadcrumb
+                links={[
+                    { label: 'Seasons', path: '/' },
+                    { label: `Races for Season ${seasonId}`, path: `/season/${seasonId}` }
+                ]}
+                currentPage={`Race Details - Round ${round}`}
+            />
+
+            {/* Title */}
             <Typography
                 variant="h4"
                 component="h1"

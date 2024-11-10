@@ -63,7 +63,7 @@ const RaceResultsTable: React.FC<RaceResultsTableProps> = ({ drivers }) => {
             data={drivers}
             rowsPerPage={10}
             renderRow={renderRow}
-            fixedHeight={500}
+            fixedHeight={430}
         />
     );
 };

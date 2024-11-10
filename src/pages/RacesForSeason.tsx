@@ -17,6 +17,7 @@ import {
 import ListIcon from '@mui/icons-material/List';
 import GridViewIcon from '@mui/icons-material/GridView';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Breadcrumb from '../components/common/Breadcrumb';
 import RaceCard from '../components/raceCard/RaceCard';
 import SeasonRacesTable from '../components/seasonRacesTable/SeasonRacesTable';
 
@@ -129,6 +130,10 @@ const RacesForSeason: React.FC = () => {
 
     return (
         <div style={{ color: theme.palette.text.primary, paddingTop: '1rem', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflowY: 'hidden' }}>
+            <Breadcrumb
+                links={[{ label: 'Seasons', path: '/' }]}
+                currentPage={`Season ${seasonId}`}
+            />
             <Typography variant="h4" component="h1" style={{ fontSize: '52px', fontWeight: 'bold', color: theme.palette.text.secondary, marginBottom: '8px', textAlign: isSmallScreen ? 'center' : 'left' }}>
                 Races for Season {seasonId}
             </Typography>
@@ -168,7 +173,7 @@ const RacesForSeason: React.FC = () => {
                     pinnedRaces={pinnedRaces}
                 />
             ) : (
-                <div className={animationClass} style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.5s ease', height: 'calc(100vh - 315px)', overflowY: 'auto' }}>
+                <div className={animationClass} style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.5s ease', height: 'calc(100vh - 360px)', overflowY: 'auto' }}>
                     <Grid2 container spacing={3} justifyContent="center" style={{ padding: '8px' }}>
                         {races.slice((currentPage - 1) * 4, currentPage * 4).map((race) => (
                             <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={race.raceName}>

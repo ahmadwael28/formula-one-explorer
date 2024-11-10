@@ -1,9 +1,18 @@
-// src/pages/SeasonListing.tsx
 import React, { useEffect, useState } from 'react';
 import { fetchSeasons } from '../api/api';
 import SeasonCard from '../components/seasonCard/SeasonCard';
 import SeasonList from '../components/seasonList/SeasonList';
-import { ToggleButton, ToggleButtonGroup, Pagination, Typography, useTheme, CircularProgress, Box, Grid2 } from '@mui/material';
+import Breadcrumb from '../components/common/Breadcrumb';
+import {
+    ToggleButton,
+    ToggleButtonGroup,
+    Pagination,
+    Typography,
+    CircularProgress,
+    Box,
+    Grid2,
+    useTheme,
+} from '@mui/material';
 import ListIcon from '@mui/icons-material/List';
 import GridViewIcon from '@mui/icons-material/GridView';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -55,7 +64,7 @@ const SeasonListing: React.FC = () => {
 
     useEffect(() => {
         fetchAndSetSeasons(currentPage);
-    }, []);
+    }, [currentPage]);
 
     const handlePageChange = (_event: React.ChangeEvent<unknown>, page: number) => {
         fetchAndSetSeasons(page);
@@ -72,7 +81,10 @@ const SeasonListing: React.FC = () => {
 
     return (
         <div style={{ color: theme.palette.text.primary, paddingTop: '1rem', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: "border-box", overflowY: "hidden" }}>
-            {/* Title */}
+            <Breadcrumb
+                links={[]}
+                currentPage="Seasons"
+            />
             <Typography
                 variant="h4"
                 component="h1"
@@ -126,14 +138,11 @@ const SeasonListing: React.FC = () => {
                 </div>
             )}
 
-            {/* Loading Spinner */}
-            {loading && (
-                <Box display="flex" justifyContent="center" alignItems="center" style={{ height: 'calc(100vh - 264px)' }}>
+            {loading ? (
+                <Box display="flex" justifyContent="center" alignItems="center" style={{ height: 'calc(100vh - 295px)' }}>
                     <CircularProgress color="primary" />
                 </Box>
-            )}
-
-            {error ? (
+            ) : error ? (
                 <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" style={{ flexGrow: 1 }}>
                     <Typography variant="h6" style={{ color: theme.palette.error.main, marginBottom: '16px', textAlign: 'center' }}>
                         {error}
@@ -146,7 +155,7 @@ const SeasonListing: React.FC = () => {
                         display: loading ? 'none' : 'flex',
                         flexDirection: 'column',
                         transition: 'opacity 0.5s ease',
-                        height: 'calc(100vh - 264px)',
+                        height: 'calc(100vh - 295px)',
                         overflowY: 'auto',
                     }}
                 >
