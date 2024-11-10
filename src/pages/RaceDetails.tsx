@@ -101,14 +101,8 @@ const RaceDetails: React.FC = () => {
                 marginBottom="16px"
                 textAlign={isSmallScreen ? 'center' : 'left'}
             >
-                <Typography
-                    variant="h5"
-                    style={{
-                        color: '#cccccc',
-                    }}
-                >
-                    Participating Drivers
-                </Typography>
+                <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary, marginBottom: isSmallScreen ? '8px' : '0' }}>Participating Drivers</Typography>
+
                 <ToggleButtonGroup
                     value={viewMode}
                     exclusive

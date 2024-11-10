@@ -30,7 +30,7 @@ interface SeasonRacesTableProps {
 }
 
 const SeasonRacesTable: React.FC<SeasonRacesTableProps> = ({ races, onRowClick, onTogglePin, pinnedRaces }) => {
-    const headers = ['Round', 'Race Name', 'Circuit', 'Date'];
+    const headers = ['Round', 'Race Name', 'Circuit', 'Date', "Actions"];
 
     const renderRaceRow = (race: Race) => (
         <>
@@ -46,7 +46,7 @@ const SeasonRacesTable: React.FC<SeasonRacesTableProps> = ({ races, onRowClick, 
         const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${race.Circuit.Location.lat},${race.Circuit.Location.long}`;
 
         return (
-            <>
+            <div style={{ width: "max-content" }}>
                 <Tooltip title={isPinned ? 'Unpin Race' : 'Pin Race'}>
                     <IconButton onClick={(e) => { e.stopPropagation(); onTogglePin(race); }} color={isPinned ? 'error' : 'default'}>
                         <PinIcon />
@@ -62,7 +62,7 @@ const SeasonRacesTable: React.FC<SeasonRacesTableProps> = ({ races, onRowClick, 
                         <MapIcon />
                     </IconButton>
                 </Tooltip>
-            </>
+            </ div>
         );
     };
 

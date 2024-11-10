@@ -120,7 +120,7 @@ const SeasonListing: React.FC = () => {
 
             {/* Loading Spinner */}
             {loading && (
-                <Box display="flex" justifyContent="center" alignItems="center" style={{ height: 'calc(100vh - 200px)' }}>
+                <Box display="flex" justifyContent="center" alignItems="center" style={{ height: 'calc(100vh - 264px)' }}>
                     <CircularProgress color="primary" />
                 </Box>
             )}

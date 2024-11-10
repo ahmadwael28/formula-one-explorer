@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStyles } from './styles';
-import { IconButton, Tooltip, Typography, Box, Button } from '@mui/material';
+import { IconButton, Tooltip, Typography, Box } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import MapIcon from '@mui/icons-material/Map';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EventIcon from '@mui/icons-material/Event';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import PushPinIcon from '@mui/icons-material/PushPin';
+import FlagIcon from '@mui/icons-material/Flag';
+import LooksOneIcon from '@mui/icons-material/LooksOne';
 import moment from 'moment';
 
 interface RaceCardProps {
@@ -20,13 +20,12 @@ interface RaceCardProps {
         date: string;
         url: string;
     };
-    togglePinCallback: () => void; // Callback to trigger sorting and notification in parent component
+    togglePinCallback: () => void;
 }
 
 const RaceCard: React.FC<RaceCardProps> = ({ seasonId, race, togglePinCallback }) => {
     const classes = useStyles();
     const navigate = useNavigate();
-    const [showDetails, setShowDetails] = useState(false);
     const pinnedRacesKey = `pinnedRaces_${seasonId}`;
     const pinnedRaces = JSON.parse(localStorage.getItem(pinnedRacesKey) || '[]');
     const isPinned = pinnedRaces.includes(race.round);
@@ -54,18 +53,7 @@ const RaceCard: React.FC<RaceCardProps> = ({ seasonId, race, togglePinCallback }
     return (
         <div className={classes.card} onClick={handleCardClick}>
             <div className={classes.background} />
-            <div className={`${classes.overlay} ${showDetails ? classes.overlayExpanded : ''}`}>
-                <Button
-                    className={classes.toggleButton}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setShowDetails((prev) => !prev);
-                    }}
-                    startIcon={showDetails ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                >
-                    {showDetails ? 'Show Less' : 'Show More'}
-                </Button>
-
+            <div className={classes.overlay}>
                 <Typography className={classes.raceName}>{race.raceName}</Typography>
                 <Box display="flex" alignItems="center" className={classes.summaryInfo}>
                     <LocationOnIcon fontSize="small" className={classes.icon} />
@@ -80,37 +68,37 @@ const RaceCard: React.FC<RaceCardProps> = ({ seasonId, race, togglePinCallback }
                     </Typography>
                 </Box>
 
-                {showDetails && (
-                    <div className={classes.raceDetails}>
-                        <Box display="flex" alignItems="center" className={classes.summaryInfo}>
-                            <Typography variant="body2" className={classes.responsiveText}>
-                                <strong>Country:</strong> {race.Circuit.Location.country}
-                            </Typography>
-                        </Box>
-                        <Box display="flex" alignItems="center" className={classes.summaryInfo}>
-                            <Typography variant="body2" className={classes.responsiveText}>
-                                <strong>Round:</strong> {race.round}
-                            </Typography>
-                        </Box>
-                        <div className={classes.buttonContainer}>
-                            <Tooltip title="Read more about this race" arrow placement="top">
-                                <IconButton onClick={openWikipediaLink} aria-label="View on Wikipedia" className={classes.buttonIcon}>
-                                    <OpenInNewIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title="View Circuit on Map" arrow placement="top">
-                                <IconButton onClick={openMap} aria-label="View on Map" className={classes.buttonIcon}>
-                                    <MapIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title={isPinned ? 'Unpin this race' : 'Pin this race'} arrow placement="top">
-                                <IconButton onClick={handlePinToggle} aria-label="Pin race" className={classes.buttonIcon} style={{ color: isPinned ? 'red' : 'inherit' }}>
-                                    <PushPinIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </div>
+                <div className={classes.raceDetails}>
+                    <Box display="flex" alignItems="center" className={classes.summaryInfo}>
+                        <FlagIcon fontSize="small" className={classes.icon} />
+                        <Typography variant="body2" className={classes.responsiveText}>
+                            <strong>Country:</strong> {race.Circuit.Location.country}
+                        </Typography>
+                    </Box>
+                    <Box display="flex" alignItems="center" className={classes.summaryInfo}>
+                        <LooksOneIcon fontSize="small" className={classes.icon} />
+                        <Typography variant="body2" className={classes.responsiveText}>
+                            <strong>Round:</strong> {race.round}
+                        </Typography>
+                    </Box>
+                    <div className={classes.buttonContainer}>
+                        <Tooltip title="Read more about this race" arrow placement="top">
+                            <IconButton onClick={openWikipediaLink} aria-label="View on Wikipedia" className={classes.buttonIcon}>
+                                <OpenInNewIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="View Circuit on Map" arrow placement="top">
+                            <IconButton onClick={openMap} aria-label="View on Map" className={classes.buttonIcon}>
+                                <MapIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title={isPinned ? 'Unpin this race' : 'Pin this race'} arrow placement="top">
+                            <IconButton onClick={handlePinToggle} aria-label="Pin race" className={classes.buttonIcon} style={{ color: isPinned ? 'red' : 'inherit' }}>
+                                <PushPinIcon />
+                            </IconButton>
+                        </Tooltip>
                     </div>
-                )}
+                </div>
             </div>
         </div>
     );

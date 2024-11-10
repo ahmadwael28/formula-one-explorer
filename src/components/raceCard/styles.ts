@@ -38,21 +38,18 @@ export const useStyles = makeStyles((theme: Theme) => ({
         right: 0,
         height: '66%',
         borderRadius: '8px',
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)', // Directly using expanded color
         color: 'white',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
         padding: '8px',
-        transition: 'transform 0.3s ease, background-color 0.3s ease',
+        transform: 'translateY(-40%)', // Always expanded
+        transition: 'background-color 0.3s ease',
         overflow: 'hidden',
     },
-    overlayExpanded: {
-        transform: 'translateY(-40%)',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    },
     raceName: {
-        fontSize: 'clamp(1.2rem, 2.5vw, 1.6rem)',
+        fontSize: "1.6rem",
         fontWeight: 'bold',
         marginBottom: '8px',
     },
@@ -66,7 +63,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
         },
     },
     responsiveText: {
-        fontSize: 'clamp(0.9rem, 2vw, 1rem)',
+        fontSize: '1rem',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -92,14 +89,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
     buttonIcon: {
         color: theme.palette.primary.main,
         margin: '0 4px',
-    },
-    toggleButton: {
-        color: 'rgba(255, 255, 255, 0.85)',
-        alignSelf: 'center',
-        fontSize: '0.9rem',
-        [theme.breakpoints.down('sm')]: {
-            fontSize: '0.8rem',
-        },
     },
 }));
 

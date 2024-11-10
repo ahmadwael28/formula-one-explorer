@@ -36,7 +36,7 @@ interface Race {
 
 const RacesForSeason: React.FC = () => {
     const theme = useTheme();
-    const isMediumOrSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const { seasonId } = useParams<{ seasonId: string }>();
     const navigate = useNavigate();
     const [races, setRaces] = useState<Race[]>([]);
@@ -121,14 +121,14 @@ const RacesForSeason: React.FC = () => {
     const pinnedRaces = JSON.parse(localStorage.getItem(getPinnedRacesKey()) || '[]');
 
     return (
-        <div style={{ color: theme.palette.text.primary, padding: '1rem', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflowY: 'hidden' }}>
-            <Typography variant="h4" component="h1" style={{ fontSize: '52px', fontWeight: 'bold', color: theme.palette.text.secondary, marginBottom: '8px', textAlign: isMediumOrSmallScreen ? 'center' : 'left' }}>
+        <div style={{ color: theme.palette.text.primary, paddingTop: `1rem`, height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflowY: 'hidden' }}>
+            <Typography variant="h4" component="h1" style={{ fontSize: '52px', fontWeight: 'bold', color: theme.palette.text.secondary, marginBottom: '8px', textAlign: isSmallScreen ? 'center' : 'left' }}>
                 Races for Season {seasonId}
             </Typography>
 
-            <div style={{ display: 'flex', flexDirection: isMediumOrSmallScreen ? 'column' : 'row', justifyContent: isMediumOrSmallScreen ? 'center' : 'space-between', alignItems: 'center', marginBottom: '16px', textAlign: isMediumOrSmallScreen ? 'center' : 'left' }}>
-                <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary, marginBottom: isMediumOrSmallScreen ? '8px' : '0' }}>Select a race to view details.</Typography>
-                <ToggleButtonGroup value={viewMode} exclusive onChange={handleViewChange} aria-label="view mode" style={{ alignSelf: isMediumOrSmallScreen ? 'center' : 'flex-end' }}>
+            <div style={{ display: 'flex', flexDirection: isSmallScreen ? 'column' : 'row', justifyContent: isSmallScreen ? 'center' : 'space-between', alignItems: 'center', marginBottom: '16px', textAlign: isSmallScreen ? 'center' : 'left' }}>
+                <Typography variant="subtitle1" style={{ color: theme.palette.text.secondary, marginBottom: isSmallScreen ? '8px' : '0' }}>Select a race to view details.</Typography>
+                <ToggleButtonGroup value={viewMode} exclusive onChange={handleViewChange} aria-label="view mode" style={{ alignSelf: isSmallScreen ? 'center' : 'flex-end' }}>
                     <ToggleButton value="list" aria-label="list view"><ListIcon /></ToggleButton>
                     <ToggleButton value="card" aria-label="card view"><GridViewIcon /></ToggleButton>
                 </ToggleButtonGroup>
@@ -146,7 +146,7 @@ const RacesForSeason: React.FC = () => {
                     pinnedRaces={pinnedRaces}
                 />
             ) : (
-                <div className={animationClass} style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.5s ease', height: 'calc(100vh - 200px)', overflowY: 'auto' }}>
+                <div className={animationClass} style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.5s ease', height: 'calc(100vh - 315px)', overflowY: 'auto' }}>
                     <Grid2 container spacing={3} justifyContent="center" style={{ padding: '8px' }}>
                         {races.slice((currentPage - 1) * 4, currentPage * 4).map((race) => (
                             <Grid2 size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={race.raceName}>
