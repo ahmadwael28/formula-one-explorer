@@ -15,7 +15,9 @@ interface PaginatedTableProps<T> {
     data: T[];
     rowsPerPage: number;
     renderRow: (item: T, index: number) => React.ReactNode;
-    fixedHeight?: number; // Optional prop to set a fixed height
+    actions?: (item: T) => React.ReactNode;
+    onRowClick?: (item: T) => void;  // New prop for row click
+    fixedHeight?: number;
 }
 
 const PaginatedTable = <T extends unknown>({
@@ -23,7 +25,9 @@ const PaginatedTable = <T extends unknown>({
     data,
     rowsPerPage: initialRowsPerPage,
     renderRow,
-    fixedHeight = 400, // Default fixed height
+    actions,
+    onRowClick,  // New prop for row click
+    fixedHeight = 400,
 }: PaginatedTableProps<T>) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
@@ -36,7 +40,7 @@ const PaginatedTable = <T extends unknown>({
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0); // Reset to the first page whenever rows per page changes
+        setPage(0);
     };
 
     const paginatedData = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
@@ -52,11 +56,24 @@ const PaginatedTable = <T extends unknown>({
                                     {header}
                                 </TableCell>
                             ))}
+                            {actions && <TableCell />}
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {paginatedData.map((item, index) => (
-                            <TableRow key={index}>{renderRow(item, index + page * rowsPerPage)}</TableRow>
+                            <TableRow
+                                key={index}
+                                hover
+                                onClick={() => onRowClick?.(item)}  // Row click handling
+                                style={{ cursor: onRowClick ? 'pointer' : 'default' }}
+                            >
+                                {renderRow(item, index + page * rowsPerPage)}
+                                {actions && (
+                                    <TableCell>
+                                        {actions(item)}
+                                    </TableCell>
+                                )}
+                            </TableRow>
                         ))}
                     </TableBody>
                 </Table>

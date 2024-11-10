@@ -44,10 +44,6 @@ const RaceCard: React.FC<RaceCardProps> = ({ seasonId, race, togglePinCallback }
 
     const handlePinToggle = (e: React.MouseEvent) => {
         e.stopPropagation();
-        const updatedPinnedRaces = isPinned
-            ? pinnedRaces.filter((round: string) => round !== race.round)
-            : [...pinnedRaces, race.round];
-        localStorage.setItem(pinnedRacesKey, JSON.stringify(updatedPinnedRaces));
         togglePinCallback();
     };
 
